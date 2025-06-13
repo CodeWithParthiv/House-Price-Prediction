@@ -36,25 +36,27 @@ X_test_scaled = scaler.transform(X_test)
 # Save the scaler
 joblib.dump(scaler, 'scaler.joblib', compress=3)
 
-# Train the model with reduced parameters
+# Train a lighter model
 model = RandomForestRegressor(
-    n_estimators=50,  # Reduced from 100
+    n_estimators=50,  # Reduced from default
     max_depth=10,     # Added max depth
     min_samples_split=5,
     min_samples_leaf=2,
     random_state=42,
     n_jobs=-1
 )
+
 model.fit(X_train_scaled, y_train)
 
-# Save the model with compression
-joblib.dump(model, 'house_price_model.joblib', compress=3)
-
-# Print model performance
+# Evaluate the model
 train_score = model.score(X_train_scaled, y_train)
 test_score = model.score(X_test_scaled, y_test)
-print(f"Training R² score: {train_score:.4f}")
-print(f"Testing R² score: {test_score:.4f}")
+
+print(f"Train R² Score: {train_score:.4f}")
+print(f"Test R² Score: {test_score:.4f}")
+
+# Save the model
+joblib.dump(model, 'house_price_model.joblib', compress=3)
 
 # Print file sizes
 for file in ['house_price_model.joblib', 'scaler.joblib', 'label_encoders.joblib']:
